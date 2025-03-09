@@ -1,15 +1,16 @@
 package com.monthlybudget.monthlybudget.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 
 @Entity
 @Table(name = "users")
@@ -68,6 +69,11 @@ public class User {
 
     // Enum for the role column
     public enum Role {
-        ADMIN, USER
+        ADMIN, USER;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase(); // Makes "admin" and "user" lowercase when stored
+        }
     }
 }
