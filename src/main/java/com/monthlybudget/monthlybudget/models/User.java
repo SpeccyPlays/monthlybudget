@@ -69,11 +69,6 @@ public class User {
 
     // Enum for the role column
     public enum Role {
-        ADMIN, USER;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase(); // Makes "admin" and "user" lowercase when stored
-        }
+        admin, user;
     }
 }
