@@ -11,10 +11,10 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public User createUser(String username, String passwordHash, User.Role role) {
+    public User createUser(String username, String password, User.Role role) {
         User user = new User();
         user.setUsername(username);
-        user.setPasswordHash(passwordHash);
+        user.setPassword(password);
         user.setRole(role);
         return userRepository.save(user);
     }

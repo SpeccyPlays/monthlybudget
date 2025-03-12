@@ -20,7 +20,7 @@ public class SecurityConfig {
 		http
             .csrf(csrf -> csrf.disable())//disable for testing
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/", "/users").permitAll()
+				.requestMatchers("/", "/admin/**").permitAll()
 				.anyRequest().authenticated()
 			);
 

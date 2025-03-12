@@ -26,8 +26,8 @@ public class User {
     private String username;
 
     @NotNull
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @NotNull
     @Enumerated(EnumType.STRING)  // Store the enum as a string (either "admin" or "user")
@@ -51,12 +51,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Role getRole() {

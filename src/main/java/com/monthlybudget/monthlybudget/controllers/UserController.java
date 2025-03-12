@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @RestController
@@ -20,22 +21,23 @@ public class UserController {
     this.userRepo = userRepo;
   }
 
-@GetMapping("/users")
+@GetMapping("/admin/users")
   public Iterable<User> findAllEmployees() {
     return this.userRepo.findAll();
   }
 
-@PostMapping("/users") 
+@PostMapping("/admin/users") 
   public ResponseEntity<String> saveUser(@RequestBody User user){
     //Check if user already exists
     User exist = userRepo.findByUsername(user.getUsername());
     if (exist != null){
       return ResponseEntity.badRequest().body("Unable to add user");
     }
-    //BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    //Santise input
+    
+    //Tidy import
     user.setUsername(user.getUsername().toLowerCase());
-    //user.setPasswordHash(bCryptPasswordEncoder.encode(user.getPasswordHash()));
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    user.setPassword(encoder.encode(user.getPassword()));
     userRepo.save(user);
     return ResponseEntity.ok().body("User added");
   }
