@@ -21,6 +21,7 @@ public class UserController {
     this.userRepo = userRepo;
   }
 
+  
 @GetMapping("/admin/users")
   public Iterable<User> findAllEmployees() {
     return this.userRepo.findAll();
