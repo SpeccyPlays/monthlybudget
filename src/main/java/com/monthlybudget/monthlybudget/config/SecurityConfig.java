@@ -22,7 +22,7 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable())// disable for testing
 
 				.authorizeHttpRequests((request) -> {
-					request.requestMatchers("/", "/admin/**", "/login").permitAll();
+					request.requestMatchers("/**", "/admin/**", "/login").permitAll();
 					request.anyRequest().authenticated();
 				});
 				/*.formLogin(form -> form

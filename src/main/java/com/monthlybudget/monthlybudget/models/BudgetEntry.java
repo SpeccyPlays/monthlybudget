@@ -1,5 +1,8 @@
 package com.monthlybudget.monthlybudget.models;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,10 +19,6 @@ public class BudgetEntry {
     private Long id;
 
     @NotNull
-    @Column(name = "daily_budget_id", nullable = false)
-    private Long daily_budget_id;
-
-    @NotNull
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -27,20 +26,24 @@ public class BudgetEntry {
     @Column(name = "amount", nullable = false)
     private float amount;
 
+    @NotNull
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDaily_budget_id() {
-        return daily_budget_id;
-    }
-
-    public void setDaily_budget_id(Long daily_budget_id) {
-        this.daily_budget_id = daily_budget_id;
     }
 
     public String getDescription() {

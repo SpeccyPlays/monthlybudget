@@ -3,6 +3,7 @@ package com.monthlybudget.monthlybudget.controllers;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
+import com.monthlybudget.monthlybudget.models.User;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 import com.monthlybudget.monthlybudget.repos.UserRepo;
 
@@ -20,4 +21,16 @@ public class BudgetEntryController {
     public BudgetEntryController(BudgetEntryRepo budgetEntryRepo) {
         this.budgetEntryRepo = budgetEntryRepo;
     }
+
+    @GetMapping("/getallentries")
+    public Iterable<BudgetEntry> getAllEntries(){
+        return this.budgetEntryRepo.findAll();
+    }
+
+    @PostMapping("/addentry")
+    public ResponseEntity<String> saveEntry(@RequestBody BudgetEntry budgetEntry){
+        budgetEntryRepo.save(budgetEntry);
+        return ResponseEntity.ok().body("Entry added");
+    }
+
 }

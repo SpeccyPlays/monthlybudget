@@ -7,5 +7,5 @@ import com.monthlybudget.monthlybudget.models.BudgetEntry;
 @Repository
 
 public interface BudgetEntryRepo extends JpaRepository<BudgetEntry, Long> {
-    BudgetEntry findByUserId(String userid);
+    //BudgetEntry findByUserId(String userid);
 }
