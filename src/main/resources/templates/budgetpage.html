@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Budget</title>
+  </head>
+  <body>
+    <h1>Your budget</h1>
+    <p th:if="${loginError}" class="error">Error</p>
+    <form th:action="@{/budgetpage}" method="post">
+      <label for="date">Date</label>:
+      <input type="text" id="date" name="date" autofocus="autofocus" /> <br />
+      <label for="description">Description</label>:
+      <input type="description" id="description" name="description" /> <br />
+      <label for="amount">Amount</label>:
+      <input type="amount" id="amount" name="amount" /> <br />
+      <input type="submit" value="Add entry" />
+    </form>
+  </body>
+</html>

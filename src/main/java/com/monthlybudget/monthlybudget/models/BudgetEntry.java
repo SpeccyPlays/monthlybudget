@@ -58,7 +58,7 @@ public class BudgetEntry {
         return amount;
     }
 
-    public void setAmount(float amount) {
-        this.amount = amount;
+    public void setAmount(String amount) {
+        this.amount = Float.parseFloat(amount);
     }
 }
