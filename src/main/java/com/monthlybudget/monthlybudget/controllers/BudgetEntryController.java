@@ -5,12 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 
+import org.springframework.ui.Model;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.http.ResponseEntity;
 
 @Controller
 public class BudgetEntryController {
@@ -21,8 +22,10 @@ public class BudgetEntryController {
     }
 
     @GetMapping("/budgetpage")
-    public String getAllEntries() {
-        return "budgetpage";
+    public String showBudgetPage(Model model) {
+        Iterable<BudgetEntry> entries = budgetEntryRepo.findAll(); // Fetch all entries
+        model.addAttribute("entries", entries); // Pass to Thymeleaf
+        return "budgetpage"; // Thymeleaf template name (budgetpage.html)
     }
 
     @PostMapping("/budgetpage")
@@ -41,6 +44,6 @@ public class BudgetEntryController {
         redirectAttributes.addFlashAttribute("message", "Entry added successfully!");
 
         return "redirect:/budgetpage";
-        
+
     }
 }
