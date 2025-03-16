@@ -1,11 +1,11 @@
 package com.monthlybudget.monthlybudget.controllers;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 
 import org.springframework.ui.Model;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +23,12 @@ public class BudgetEntryController {
 
     @GetMapping("/budgetpage")
     public String showBudgetPage(Model model) {
-        Iterable<BudgetEntry> entries = budgetEntryRepo.findAll(); // Fetch all entries
-        model.addAttribute("entries", entries); // Pass to Thymeleaf
-        return "budgetpage"; // Thymeleaf template name (budgetpage.html)
+        Iterable<BudgetEntry> entries = budgetEntryRepo.findAll();
+        model.addAttribute("entries", entries);
+        LocalDate todaysDate = LocalDate.now();
+        DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
+        return "budgetpage"; 
     }
 
     @PostMapping("/budgetpage")

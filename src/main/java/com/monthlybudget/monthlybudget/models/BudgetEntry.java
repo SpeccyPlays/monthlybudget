@@ -1,7 +1,8 @@
 package com.monthlybudget.monthlybudget.models;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,14 +29,18 @@ public class BudgetEntry {
 
     @NotNull
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private Date date;
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
     public void setDate(String date) {
-        this.date = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        try {
+            this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public Long getId() {
