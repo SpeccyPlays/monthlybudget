@@ -22,13 +22,28 @@ public class BudgetEntryController {
     }
 
     @GetMapping("/budgetpage")
-    public String showBudgetPage(Model model) {
-        Iterable<BudgetEntry> entries = budgetEntryRepo.findAll();
-        model.addAttribute("entries", entries);
+    public String showBudgetPage(
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "month", required = false) Integer month,
+            Model model) {
+
         LocalDate todaysDate = LocalDate.now();
         DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
-        return "budgetpage"; 
+
+        Iterable<BudgetEntry> entries;
+        Integer yearParam = todaysDate.getYear();
+        Integer monthParam = todaysDate.getMonthValue();
+
+        if (year != null) {
+            yearParam = year;
+        }
+        if (month != null) {
+            monthParam = month;
+        }
+        entries = budgetEntryRepo.getByYearAndMonth(yearParam, monthParam);
+        model.addAttribute("entries", entries);
+        return "budgetpage";
     }
 
     @PostMapping("/budgetpage")
