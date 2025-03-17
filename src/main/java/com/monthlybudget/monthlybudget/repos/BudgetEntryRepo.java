@@ -10,6 +10,10 @@ import com.monthlybudget.monthlybudget.models.BudgetEntry;
 @Repository
 
 public interface BudgetEntryRepo extends JpaRepository<BudgetEntry, Long> {
+
+    @Query("SELECT b FROM BudgetEntry b WHERE EXTRACT(YEAR FROM b.date) = :yearValue")
+    Iterable<BudgetEntry> getByYear(@Param("yearValue") Integer yearValue);
+    
     @Query("SELECT b FROM BudgetEntry b WHERE EXTRACT(YEAR FROM b.date) = :yearValue AND EXTRACT(MONTH from b.date) = :monthValue")
     Iterable<BudgetEntry> getByYearAndMonth(@Param("yearValue") Integer yearValue, @Param("monthValue") Integer monthValue);
 }

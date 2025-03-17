@@ -2,12 +2,14 @@ package com.monthlybudget.monthlybudget.controllers;
 
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
+import com.monthlybudget.monthlybudget.services.BudgetEntryService;
 
 import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class BudgetEntryController {
-    private final BudgetEntryRepo budgetEntryRepo;
-
-    public BudgetEntryController(BudgetEntryRepo budgetEntryRepo) {
-        this.budgetEntryRepo = budgetEntryRepo;
-    }
+    @Autowired
+    private BudgetEntryService budgetEntryService;
 
     @GetMapping("/budgetpage")
     public String showBudgetPage(
@@ -30,18 +29,7 @@ public class BudgetEntryController {
         LocalDate todaysDate = LocalDate.now();
         DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
-
-        Iterable<BudgetEntry> entries;
-        Integer yearParam = todaysDate.getYear();
-        Integer monthParam = todaysDate.getMonthValue();
-
-        if (year != null) {
-            yearParam = year;
-        }
-        if (month != null) {
-            monthParam = month;
-        }
-        entries = budgetEntryRepo.getByYearAndMonth(yearParam, monthParam);
+        Iterable<BudgetEntry> entries = budgetEntryService.getBudgetEntries(year, month);
         model.addAttribute("entries", entries);
         return "budgetpage";
     }
@@ -53,15 +41,12 @@ public class BudgetEntryController {
             @RequestParam("amount") String amount,
             RedirectAttributes redirectAttributes) {
 
-        BudgetEntry entry = new BudgetEntry();
-        entry.setDate(date);
-        entry.setDescription(description);
-        entry.setAmount(amount);
-
-        budgetEntryRepo.save(entry);
-        redirectAttributes.addFlashAttribute("message", "Entry added successfully!");
-
+        if (budgetEntryService.save(date, description, amount)){
+            redirectAttributes.addFlashAttribute("message", "Entry added successfully!");
+        } 
+        else {
+            redirectAttributes.addFlashAttribute("error", "Failed to add entry. Please check your input.");
+        };
         return "redirect:/budgetpage";
-
     }
 }
