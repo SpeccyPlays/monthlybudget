@@ -1,7 +1,6 @@
 package com.monthlybudget.monthlybudget.controllers;
 
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
-import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 import com.monthlybudget.monthlybudget.services.BudgetEntryService;
 
 import org.springframework.ui.Model;
