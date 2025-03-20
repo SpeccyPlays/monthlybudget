@@ -1,44 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Budget</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Your Budget</h1>
 
     <!-- Show success message -->
     <p th:if="${message}" class="success-message" th:text="${message}"></p>
-
+    <div>
+      <span>Select Year:</span>
+      <a
+        th:href="@{/budgetpage}"
+        style="
+          margin-right: 10px;
+          text-decoration: none;
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        "
+      >
+        Show All Years
+      </a>
+      <a
+        th:each="yr : ${years}"
+        th:href="@{/budgetpage(year=${yr})}"
+        th:text="${yr}"
+        style="
+          margin-right: 10px;
+          text-decoration: none;
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        "
+      >
+      </a>
+    </div>
     <!-- Budget Entries Table -->
     <table border="1">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="entry : ${entries}">
-                <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
-                <td th:text="${entry.description}"></td>
-                <td th:text="${entry.amount}"></td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="entry : ${entries}">
+          <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
+          <td th:text="${entry.description}"></td>
+          <td th:text="${entry.amount}"></td>
+        </tr>
+      </tbody>
     </table>
 
     <!-- Budget Entry Form -->
     <form th:action="@{/budgetpage}" method="post">
-        <label for="date">Date</label>:
-        <input type="date" id="date" name="date" th:value="${todaysdate}" required /><br />
+      <label for="date">Date</label>:
+      <input
+        type="date"
+        id="date"
+        name="date"
+        th:value="${todaysdate}"
+        required
+      /><br />
 
-        <label for="description">Description</label>:
-        <input type="text" id="description" name="description" required /><br />
+      <label for="description">Description</label>:
+      <input type="text" id="description" name="description" required /><br />
 
-        <label for="amount">Amount</label>:
-        <input type="number" id="amount" name="amount" step="0.01" required /><br />
+      <label for="amount">Amount</label>:
+      <input
+        type="number"
+        id="amount"
+        name="amount"
+        step="0.01"
+        required
+      /><br />
 
-        <input type="submit" value="Add Entry" />
+      <input type="submit" value="Add Entry" />
     </form>
-</body>
+  </body>
 </html>

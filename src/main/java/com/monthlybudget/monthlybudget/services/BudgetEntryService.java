@@ -26,7 +26,9 @@ public class BudgetEntryService {
         Integer monthParam = (month != null) ? month : today.getMonthValue();
         return budgetEntryRepo.getByYearAndMonth(yearParam, monthParam);
     }
-
+    public Iterable<BudgetEntry> getAllEntries(){
+        return budgetEntryRepo.findAll();
+    }
     public boolean save(String date, String description, String amount) {
         try {
             BudgetEntry entry = new BudgetEntry();
