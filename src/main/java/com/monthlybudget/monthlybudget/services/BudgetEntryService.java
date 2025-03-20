@@ -4,6 +4,9 @@ import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +31,21 @@ public class BudgetEntryService {
     }
     public Iterable<BudgetEntry> getAllEntries(){
         return budgetEntryRepo.findAll();
+    }
+    public List<Integer> getYearsList(){
+        //Prepare year selection values based on the years in the entries
+        //Get all the entries (I don't like this for scaleability but it's easier)
+        Iterable<BudgetEntry> allEntries = budgetEntryRepo.findAll();
+        List<Integer> years = new ArrayList<Integer>();
+        allEntries.forEach((entry) -> {
+            //convert date used in postgres to localdate
+            LocalDate date = LocalDate.ofInstant(entry.getDate().toInstant(), ZoneId.systemDefault());
+            int entryYear = date.getYear();
+            if (!years.contains(entryYear)){
+                years.add(entryYear);
+            }
+        });
+        return years;
     }
     public boolean save(String date, String description, String amount) {
         try {

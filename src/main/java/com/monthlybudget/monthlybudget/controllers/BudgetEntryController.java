@@ -4,9 +4,7 @@ import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.services.BudgetEntryService;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -32,18 +30,7 @@ public class BudgetEntryController {
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
         Iterable<BudgetEntry> entries = budgetEntryService.getBudgetEntries(year, month);
         model.addAttribute("entries", entries);
-        //Prepare year selection values based on the years in the entries
-        //Get all the entries again (I don't like this for scaleability but it's easier)
-        Iterable<BudgetEntry> allEntries = budgetEntryService.getAllEntries();
-        List<Integer> years = new ArrayList<Integer>();
-        allEntries.forEach((entry) -> {
-            //convert date used in postgres to localdate
-            LocalDate date = LocalDate.ofInstant(entry.getDate().toInstant(), ZoneId.systemDefault());
-            int entryYear = date.getYear();
-            if (!years.contains(entryYear)){
-                years.add(entryYear);
-            }
-        });
+        List<Integer> years = budgetEntryService.getYearsList();
         model.addAttribute("years", years);
         return "budgetpage";
     }
