@@ -2,13 +2,14 @@ package com.monthlybudget.monthlybudget.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -21,14 +22,28 @@ public class SecurityConfig {
 
 				.csrf(csrf -> csrf.disable())// disable for testing
 
-				.authorizeHttpRequests((request) -> {
-					request.requestMatchers("/**", "/admin/**", "/login").permitAll();
-					request.anyRequest().authenticated();
-				});
-				/*.formLogin(form -> form
+				.authorizeHttpRequests((request) -> 
+					request.requestMatchers("/", "/admin/**").permitAll()
+					.anyRequest().authenticated()
+				)
+				.formLogin(form -> form
 						.loginPage("/login")
-						.permitAll());*/
+						.permitAll())
+				.logout((logout) -> logout.permitAll());
 		return http.build();
 	}
+
+	@Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return new ProviderManager(authProvider);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }

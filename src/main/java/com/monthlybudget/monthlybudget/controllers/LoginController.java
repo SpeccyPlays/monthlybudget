@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class LoginController {
     @GetMapping("/login")
-    public String home(){
+    public String loginPage() {
         return "login";
     }
 }
