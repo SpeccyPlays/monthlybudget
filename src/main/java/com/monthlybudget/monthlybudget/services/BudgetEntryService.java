@@ -63,4 +63,8 @@ public class BudgetEntryService {
             return false;
         }
     }
+
+    public void deleteById(Long id){
+        budgetEntryRepo.deleteById(id);
+    }
 }

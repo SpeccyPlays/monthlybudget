@@ -43,6 +43,7 @@
           <th>Date</th>
           <th>Description</th>
           <th>Amount</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -50,6 +51,16 @@
           <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
           <td th:text="${entry.description}"></td>
           <td th:text="${entry.amount}"></td>
+          <td>
+            <form
+              th:action="@{/budgetpage/{id}(id=${entry.id})}"
+              method="post"
+              onsubmit="return confirm('Are you sure you want to delete?')"
+            >
+            <input type="hidden" name="_method" value="DELETE" />
+              <button type="submit">Delete</button>
+            </form>
+          </td>
         </tr>
       </tbody>
     </table>
