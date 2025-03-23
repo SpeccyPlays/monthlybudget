@@ -1,6 +1,7 @@
 package com.monthlybudget.monthlybudget.services;
 
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
+import com.monthlybudget.monthlybudget.models.BudgetEntry.EntryType;
 import com.monthlybudget.monthlybudget.repos.BudgetEntryRepo;
 
 import java.time.LocalDate;
@@ -16,18 +17,18 @@ public class BudgetEntryService {
     @Autowired
     private BudgetEntryRepo budgetEntryRepo;
 
-    public Iterable<BudgetEntry> getBudgetEntries(Integer year, Integer month) {
+    public Iterable<BudgetEntry> getBudgetEntries(Integer year, Integer month, Long userId) {
         LocalDate today = LocalDate.now();
         if (year == null && month == null){
-            return budgetEntryRepo.findAll();
+            return budgetEntryRepo.getByUserId(userId);
         }
         Integer yearParam = (year != null) ? year : today.getYear();
         if (month == null) {
             System.out.println("Fetching entries for year: " + yearParam);
-            return budgetEntryRepo.getByYear(yearParam);
+            return budgetEntryRepo.getByYear(yearParam, userId);
         }
         Integer monthParam = (month != null) ? month : today.getMonthValue();
-        return budgetEntryRepo.getByYearAndMonth(yearParam, monthParam);
+        return budgetEntryRepo.getByYearAndMonth(yearParam, monthParam, userId);
     }
     public Iterable<BudgetEntry> getAllEntries(){
         return budgetEntryRepo.findAll();
@@ -47,12 +48,14 @@ public class BudgetEntryService {
         });
         return years;
     }
-    public boolean save(String date, String description, String amount) {
+    public boolean save(String date, String description, String amount, EntryType entryType, Long userId) {
         try {
             BudgetEntry entry = new BudgetEntry();
             entry.setDate(date);
             entry.setDescription(description);
+            entry.setEntrytype(entryType);
             entry.setAmount(amount);
+            entry.setUserid(userId);
             budgetEntryRepo.save(entry);
             return true;
         } catch (Exception e) {

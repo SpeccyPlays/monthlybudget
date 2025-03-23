@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,6 +32,31 @@ public class BudgetEntry {
     @NotNull
     @Column(name = "date", nullable = false)
     private Date date;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)  // Store the enum as a string (either "income" or "expense")
+    @Column(name = "entrytype", nullable = false)
+    private EntryType entrytype;
+
+    @NotNull
+    @Column(name = "userid", nullable = false)
+    private Long userid;
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public EntryType getEntrytype() {
+        return entrytype;
+    }
+
+    public void setEntrytype(EntryType entrytype) {
+        this.entrytype = entrytype;
+    }
 
     public Date getDate() {
         return date;
@@ -64,6 +91,14 @@ public class BudgetEntry {
     }
 
     public void setAmount(String amount) {
-        this.amount = Float.parseFloat(amount);
+        float newAmount = Float.parseFloat(amount);
+        if (this.entrytype == EntryType.expense){
+            newAmount *= -1;
+        }
+        this.amount = newAmount;
+    }
+
+    public enum EntryType {
+        income, expense;
     }
 }

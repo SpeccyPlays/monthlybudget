@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String username);
-    @Query("SELECT new com.monthlybudget.monthlybudget.datatransferobjects.UserDto(u.username, u.role) FROM User u")
+    @Query("SELECT new com.monthlybudget.monthlybudget.datatransferobjects.UserDto(u.username, u.role, u.id) FROM User u")
     List<UserDto> findAllUsersWithoutIncPassword();
 }

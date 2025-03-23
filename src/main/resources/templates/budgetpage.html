@@ -4,7 +4,7 @@
     <title>Budget</title>
   </head>
   <body>
-    <h1>Your Budget</h1>
+    <h1 th:if="${username}" th:text="${username}"></h1>
 
     <!-- Show success message -->
     <p th:if="${message}" class="success-message" th:text="${message}"></p>
@@ -76,6 +76,19 @@
         step="0.01"
         required
       /><br />
+      <fieldset>
+        <legend>Type of entry (income or expense)</legend>
+        <label for="entrytype">Expense</label>
+        <input
+          type="radio"
+          id="expense"
+          name="entrytype"
+          value="expense"
+          checked
+        />
+        <label for="entrytype">Income</label>
+        <input type="radio" id="income" name="entrytype" value="income" />
+      </fieldset>
 
       <input type="submit" value="Add Entry" />
     </form>
