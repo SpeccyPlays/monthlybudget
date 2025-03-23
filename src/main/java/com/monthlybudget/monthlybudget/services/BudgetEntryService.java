@@ -33,10 +33,10 @@ public class BudgetEntryService {
     public Iterable<BudgetEntry> getAllEntries(){
         return budgetEntryRepo.findAll();
     }
-    public List<Integer> getYearsList(){
+    public List<Integer> getYearsList(Long userId){
         //Prepare year selection values based on the years in the entries
         //Get all the entries (I don't like this for scaleability but it's easier)
-        Iterable<BudgetEntry> allEntries = budgetEntryRepo.findAll();
+        Iterable<BudgetEntry> allEntries = budgetEntryRepo.getByUserId(userId);
         List<Integer> years = new ArrayList<Integer>();
         allEntries.forEach((entry) -> {
             //convert date used in postgres to localdate

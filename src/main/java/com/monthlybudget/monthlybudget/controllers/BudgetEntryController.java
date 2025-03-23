@@ -48,7 +48,7 @@ public class BudgetEntryController {
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
         Iterable<BudgetEntry> entries = budgetEntryService.getBudgetEntries(year, month, loggedInUser.getId());
         model.addAttribute("entries", entries);
-        List<Integer> years = budgetEntryService.getYearsList();
+        List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
         model.addAttribute("years", years);
         return "budgetpage";
     }
