@@ -1,10 +1,33 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-    <title>Home - Monthly budget calculator</title> 
+  <head>
+    <title>Home - Monthly budget calculator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-    <p th:text="|Hello, ${name}!|" />
-</body>
+  </head>
+  <body>
+    <a
+      th:href="@{/register}"
+      style="
+        margin-right: 10px;
+        text-decoration: none;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      "
+    >
+      Register
+    </a>
+    <a
+      th:href="@{/login}"
+      style="
+        margin-right: 10px;
+        text-decoration: none;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      "
+    >
+      Login
+    </a>
+  </body>
 </html>
