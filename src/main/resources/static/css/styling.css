@@ -1,0 +1,28 @@
+body {
+    background-color: #beeefe;
+}
+div {
+    padding: 2.5px 5px;
+}
+.link-btn {
+  display: inline-block;
+  padding: 2.5px 5px;
+  font-size: 16px;
+  text-decoration: none;
+  background-color: #e7e7e7;
+  color: black;
+  border: 1px solid #d6d6d6;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.link-btn:hover {
+  background-color: #4c4c4c;
+  border-color: #3b3b3b;
+}
+.header-table {
+  margin-right: 10px;
+  text-decoration: none;
+  padding: 5px;
+}

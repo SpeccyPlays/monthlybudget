@@ -2,41 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Budget</title>
+    <link rel="stylesheet" href="/css/styling.css">
   </head>
   <body>
     <h1 th:if="${username}" th:text="${username}"></h1>
 
     <!-- Show success message -->
     <p th:if="${message}" class="success-message" th:text="${message}"></p>
-    <div>
-      <span>Select Year:</span>
-      <a
+    <a class="link-btn"
         th:href="@{/budgetpage}"
-        style="
-          margin-right: 10px;
-          text-decoration: none;
-          padding: 5px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-        "
       >
         Show All Years
       </a>
-      <a
+      <div><span>Select Year:</span>
+      
+      <a class="link-btn"
         th:each="yr : ${years}"
         th:href="@{/budgetpage(year=${yr})}"
         th:text="${yr}"
-        style="
-          margin-right: 10px;
-          text-decoration: none;
-          padding: 5px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-        "
       >
-      </a>
+      </a></div>
     </div>
     <!-- Budget Entries Table -->
+     <div>
     <table border="1">
       <thead>
         <tr>
@@ -58,14 +46,15 @@
               onsubmit="return confirm('Are you sure you want to delete?')"
             >
             <input type="hidden" name="_method" value="DELETE" />
-              <button type="submit">Delete</button>
+              <button class="btn" type="submit">Delete</button>
             </form>
           </td>
         </tr>
       </tbody>
     </table>
-
+  </div>
     <!-- Budget Entry Form -->
+     <div>
     <form th:action="@{/budgetpage}" method="post">
       <label for="date">Date</label>:
       <input
@@ -88,7 +77,7 @@
         required
       /><br />
       <fieldset>
-        <legend>Type of entry (income or expense)</legend>
+        <legend>Type of entry</legend>
         <label for="entrytype">Expense</label>
         <input
           type="radio"
@@ -103,5 +92,6 @@
 
       <input type="submit" value="Add Entry" />
     </form>
+  </div>
   </body>
 </html>

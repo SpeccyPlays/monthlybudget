@@ -22,28 +22,29 @@ public class SecurityConfig {
 
 				.csrf(csrf -> csrf.disable())// disable for testing
 
-				.authorizeHttpRequests((request) -> 
-					request.requestMatchers("/", "/register", "/admin/**").permitAll()
-					.anyRequest().authenticated()
-				)
+				.authorizeHttpRequests((request) -> request
+						.requestMatchers("/", "/register", "/css/**", "/admin/**").permitAll()
+						.anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage("/login")
-						.permitAll())
-				.logout((logout) -> logout.permitAll());
+						.permitAll()
+						.defaultSuccessUrl("/budgetpage", true))
+				.logout((logout) -> logout
+						.permitAll());
 		return http.build();
 	}
 
 	@Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
-        return new ProviderManager(authProvider);
-    }
+	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+		return new ProviderManager(authProvider);
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 }
