@@ -1,5 +1,6 @@
 package com.monthlybudget.monthlybudget.controllers;
 
+import com.monthlybudget.monthlybudget.datatransferobjects.BudgetEntriesByMonthDTO;
 import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.services.BudgetEntryService;
 import com.monthlybudget.monthlybudget.services.UserService;
@@ -30,6 +31,30 @@ public class BudgetEntryController {
 
     @GetMapping("/budgetpage")
     public String showBudgetPage(
+            Model model) {
+        //get logged in user details
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // Get the username
+
+        // Fetch the user from the database
+        User loggedInUser = userService.findByUsername(username);
+        if (loggedInUser == null) {
+            return "redirect:/login"; // Redirect if user is not found
+        }
+        model.addAttribute("username", loggedInUser.getUsername() + "'s budget page");
+        //get entries based on params and add to model
+        LocalDate todaysDate = LocalDate.now();//used to set default value for date picker
+        DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
+        List<BudgetEntriesByMonthDTO> entries = budgetEntryService.getBudgetEntriesGrouped(loggedInUser.getId());
+        model.addAttribute("entries", entries);
+        List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
+        model.addAttribute("years", years);
+        return "budgetpage";
+    }
+
+    /*@GetMapping("/budgetpage")
+    public String showBudgetPage(
             @RequestParam(value = "year", required = false) Integer year,
             @RequestParam(value = "month", required = false) Integer month,
             Model model) {
@@ -44,7 +69,7 @@ public class BudgetEntryController {
         }
         model.addAttribute("username", loggedInUser.getUsername() + "'s budget page");
         //get entries based on params and add to model
-        LocalDate todaysDate = LocalDate.now();
+        LocalDate todaysDate = LocalDate.now();//used to set default value for date picker
         DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
         Iterable<BudgetEntry> entries = budgetEntryService.getBudgetEntries(year, month, loggedInUser.getId());
@@ -52,7 +77,7 @@ public class BudgetEntryController {
         List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
         model.addAttribute("years", years);
         return "budgetpage";
-    }
+    }*/
 
     @PostMapping("/budgetpage")
     public String saveEntry(
