@@ -1,7 +1,6 @@
 package com.monthlybudget.monthlybudget.controllers;
 
 import com.monthlybudget.monthlybudget.datatransferobjects.BudgetEntriesByMonthDTO;
-import com.monthlybudget.monthlybudget.models.BudgetEntry;
 import com.monthlybudget.monthlybudget.services.BudgetEntryService;
 import com.monthlybudget.monthlybudget.services.UserService;
 import com.monthlybudget.monthlybudget.models.User;
@@ -49,6 +48,8 @@ public class BudgetEntryController {
         List<BudgetEntriesByMonthDTO> entries = budgetEntryService.getBudgetEntriesGrouped(loggedInUser.getId());
         model.addAttribute("entries", entries);
         List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
+        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        model.addAttribute("monthnames", monthNames);
         model.addAttribute("years", years);
         return "budgetpage";
     }

@@ -13,9 +13,9 @@
     <!-- Select Year Links -->
     <div><span>Select Year:</span>
       <a class="link-btn"
-        th:each="yr : ${years}"
-        th:href="@{/budgetpage(year=${yr})}"
-        th:text="${yr}"
+        th:each="yearData : ${entries}"
+        th:href="@{/budgetpage(year=${yearData.year})}"
+        th:text="'Year: ' + ${yearData.year}"
       ></a>
     </div>
 
@@ -24,8 +24,7 @@
       <h2 th:text="'Year: ' + ${yearData.year}"></h2>
 
       <div th:each="monthEntries : ${yearData.monthlyEntries}">
-        <h3 th:text="'Month: ' + ${monthEntries.key}"></h3>
-
+        <h3 th:text="'Month: ' + ${monthnames[monthEntries.key - 1]}"></h3>
         <table border="1">
           <thead>
             <tr>
@@ -52,6 +51,13 @@
               </td>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <td>Month total</td>
+
+              <td style="text-align: right" colspan="2" th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
