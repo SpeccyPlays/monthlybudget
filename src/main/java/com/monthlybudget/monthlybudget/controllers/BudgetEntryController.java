@@ -8,7 +8,9 @@ import com.monthlybudget.monthlybudget.models.BudgetEntry.EntryType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,13 @@ public class BudgetEntryController {
     @Autowired
     private BudgetEntryService budgetEntryService;
 
-     @Autowired
+    @Autowired
     private UserService userService;
 
     @GetMapping("/budgetpage")
     public String showBudgetPage(
             Model model) {
-        //get logged in user details
+        // get logged in user details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // Get the username
 
@@ -41,44 +43,27 @@ public class BudgetEntryController {
             return "redirect:/login"; // Redirect if user is not found
         }
         model.addAttribute("username", loggedInUser.getUsername() + "'s budget page");
-        //get entries based on params and add to model
-        LocalDate todaysDate = LocalDate.now();//used to set default value for date picker
+        // get entries based on params and add to model
+        LocalDate todaysDate = LocalDate.now();// used to set default value for date picker
         DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
         List<BudgetEntriesByMonthDTO> entries = budgetEntryService.getBudgetEntriesGrouped(loggedInUser.getId());
         model.addAttribute("entries", entries);
+        // Get values needed for ease of display
         List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
-        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December" };
         model.addAttribute("monthnames", monthNames);
         model.addAttribute("years", years);
+        // Get cumulative totals
+        Map<Integer, Map<Integer, Float>> cumulativeTotals = new HashMap<>();
+        ;
+        for (BudgetEntriesByMonthDTO yearData : entries) {
+            cumulativeTotals.put(yearData.getYear(), yearData.getCumulativeTotals());
+        }
+        model.addAttribute("cumulativeTotals", cumulativeTotals);
         return "budgetpage";
     }
-
-    /*@GetMapping("/budgetpage")
-    public String showBudgetPage(
-            @RequestParam(value = "year", required = false) Integer year,
-            @RequestParam(value = "month", required = false) Integer month,
-            Model model) {
-        //get logged in user details
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName(); // Get the username
-
-        // Fetch the user from the database
-        User loggedInUser = userService.findByUsername(username);
-        if (loggedInUser == null) {
-            return "redirect:/login"; // Redirect if user is not found
-        }
-        model.addAttribute("username", loggedInUser.getUsername() + "'s budget page");
-        //get entries based on params and add to model
-        LocalDate todaysDate = LocalDate.now();//used to set default value for date picker
-        DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
-        Iterable<BudgetEntry> entries = budgetEntryService.getBudgetEntries(year, month, loggedInUser.getId());
-        model.addAttribute("entries", entries);
-        List<Integer> years = budgetEntryService.getYearsList(loggedInUser.getId());
-        model.addAttribute("years", years);
-        return "budgetpage";
-    }*/
 
     @PostMapping("/budgetpage")
     public String saveEntry(
@@ -88,27 +73,26 @@ public class BudgetEntryController {
             @RequestParam("entrytype") EntryType entryType,
             RedirectAttributes redirectAttributes) {
 
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // Get the username
 
         // Fetch the user from the database
         User loggedInUser = userService.findByUsername(username);
-        if (loggedInUser == null){
+        if (loggedInUser == null) {
             return "redirect/login";
         }
-        if (budgetEntryService.save(date, description, amount, entryType, loggedInUser.getId())){
+        if (budgetEntryService.save(date, description, amount, entryType, loggedInUser.getId())) {
             redirectAttributes.addFlashAttribute("message", "Entry added successfully!");
-        } 
-        else {
+        } else {
             redirectAttributes.addFlashAttribute("error", "Failed to add entry. Please check your input.");
-        };
+        }
+        ;
         return "redirect:/budgetpage";
     }
 
     @PostMapping("budgetpage/{id}")
     public String deleteEntry(
-            @PathVariable("id") Long id
-    ){
+            @PathVariable("id") Long id) {
         budgetEntryService.deleteById(id);
         return "redirect:/budgetpage";
     }

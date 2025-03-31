@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Budget</title>
-    <link rel="stylesheet" href="/css/styling.css">
+    <link rel="stylesheet" href="/css/styling.css" />
   </head>
   <body>
     <h1 th:if="${username}" th:text="${username}"></h1>
@@ -11,14 +11,15 @@
     <p th:if="${message}" class="success-message" th:text="${message}"></p>
 
     <!-- Select Year Links -->
-    <div><span>Select Year:</span>
-      <a class="link-btn"
+    <div>
+      <span>Select Year:</span>
+      <a
+        class="link-btn"
         th:each="yearData : ${entries}"
         th:href="@{/budgetpage(year=${yearData.year})}"
         th:text="'Year: ' + ${yearData.year}"
       ></a>
     </div>
-
     <!-- Budget Entries Grouped by Year and Month -->
     <div th:each="yearData : ${entries}">
       <h2 th:text="'Year: ' + ${yearData.year}"></h2>
@@ -54,8 +55,19 @@
           <tfoot>
             <tr>
               <td>Month total</td>
-
-              <td style="text-align: right" colspan="2" th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"></td>
+              <td
+                style="text-align: right"
+                colspan="2"
+                th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"
+              ></td>
+            </tr>
+            <tr>
+              <td>Cumulative total</td>
+              <td
+                style="text-align: right"
+                colspan="2"
+                th:text="${#numbers.formatCurrency(cumulativeTotals[yearData.year][monthEntries.key])}"
+              ></td>
             </tr>
           </tfoot>
         </table>
@@ -66,18 +78,36 @@
     <div>
       <form th:action="@{/budgetpage}" method="post">
         <label for="date">Date</label>:
-        <input type="date" id="date" name="date" th:value="${todaysdate}" required /><br />
+        <input
+          type="date"
+          id="date"
+          name="date"
+          th:value="${todaysdate}"
+          required
+        /><br />
 
         <label for="description">Description</label>:
         <input type="text" id="description" name="description" required /><br />
 
         <label for="amount">Amount</label>:
-        <input type="number" id="amount" name="amount" step="0.01" required /><br />
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          step="0.01"
+          required
+        /><br />
 
         <fieldset>
           <legend>Type of entry</legend>
           <label for="entrytype">Expense</label>
-          <input type="radio" id="expense" name="entrytype" value="expense" checked />
+          <input
+            type="radio"
+            id="expense"
+            name="entrytype"
+            value="expense"
+            checked
+          />
           <label for="entrytype">Income</label>
           <input type="radio" id="income" name="entrytype" value="income" />
         </fieldset>

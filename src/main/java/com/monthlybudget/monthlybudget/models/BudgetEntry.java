@@ -34,7 +34,7 @@ public class BudgetEntry {
     private Date date;
 
     @NotNull
-    @Enumerated(EnumType.STRING)  // Store the enum as a string (either "income" or "expense")
+    @Enumerated(EnumType.STRING) // Store the enum as a string (either "income" or "expense")
     @Column(name = "entrytype", nullable = false)
     private EntryType entrytype;
 
@@ -92,7 +92,7 @@ public class BudgetEntry {
 
     public void setAmount(String amount) {
         float newAmount = Float.parseFloat(amount);
-        if (this.entrytype == EntryType.expense){
+        if (this.entrytype == EntryType.expense) {
             newAmount *= -1;
         }
         this.amount = newAmount;
@@ -100,5 +100,10 @@ public class BudgetEntry {
 
     public enum EntryType {
         income, expense;
+    }
+
+    @Override
+    public String toString() {
+        return "{date: " + date + ", amount: " + amount + ", category: " + entrytype + "}";
     }
 }
