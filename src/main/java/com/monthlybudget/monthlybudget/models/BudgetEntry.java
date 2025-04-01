@@ -99,7 +99,7 @@ public class BudgetEntry {
     }
 
     public enum EntryType {
-        income, expense;
+        income, expense, intosavings;
     }
 
     @Override
