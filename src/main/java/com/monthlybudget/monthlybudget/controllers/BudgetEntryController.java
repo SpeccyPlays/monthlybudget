@@ -45,8 +45,9 @@ public class BudgetEntryController {
         model.addAttribute("username", loggedInUser.getUsername() + "'s budget page");
         // get entries based on params and add to model
         LocalDate todaysDate = LocalDate.now();// used to set default value for date picker
-        DateTimeFormatter dateFormatting = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        model.addAttribute("todaysdate", todaysDate.format(dateFormatting));
+        model.addAttribute("todaysdate", todaysDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        model.addAttribute("todayyear", todaysDate.format(DateTimeFormatter.ofPattern("yyyy")));
+        model.addAttribute("todaymonth", todaysDate.format(DateTimeFormatter.ofPattern("MM")));
         List<BudgetEntriesByMonthDTO> entries = budgetEntryService.getBudgetEntriesGrouped(loggedInUser.getId());
         model.addAttribute("entries", entries);
         // Get values needed for ease of display
