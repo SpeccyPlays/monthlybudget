@@ -19,67 +19,70 @@
         th:onclick="|handleYearClick(event, ${yearData.year})|"
       ></h2>
       <!--For each year-->
-      <div
+      <div th:id="'divyear_' + ${yearData.year}">
+        <div
+        th:id="'divyear_' + ${yearData.year}"
         th:style="'display:' + (${yearData.year} == ${todayyear} ? 'block' : 'none')"
-        th:each="monthEntries : ${yearData.monthlyEntries}"
-      >
-        <!--For each month of the year-->
-        <h3
-        class="link-btn"
-          th:text="${monthnames[monthEntries.key - 1]}"
-          th:onclick="|handleMonthClick(event, ${monthEntries.key})|"
-        ></h3>
-        <table
-          th:id="'tbl_' + ${monthEntries.key}"
-          th:style="'display:' + (${monthEntries.key + 1} == ${todaymonth} ? 'block' : 'none')"
+          th:each="monthEntries : ${yearData.monthlyEntries}"
         >
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="entry : ${monthEntries.value}">
-              <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
-              <td th:text="${entry.description}"></td>
-              <td
-                class="amount"
-                th:text="${#numbers.formatCurrency(entry.amount)}"
-              ></td>
-              <td>
-                <form
-                  th:action="@{/budgetpage/{id}(id=${entry.id})}"
-                  method="post"
-                  onsubmit="return confirm('Are you sure you want to delete?')"
-                >
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button class="btn" type="submit">Delete</button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>Month total</td>
-              <td
-                class="amount"
-                colspan="2"
-                th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"
-              ></td>
-            </tr>
-            <tr>
-              <td>Cumulative total</td>
-              <td
-                class="amount"
-                colspan="2"
-                th:text="${#numbers.formatCurrency(cumulativeTotals[yearData.year][monthEntries.key])}"
-              ></td>
-            </tr>
-          </tfoot>
-        </table>
+          <!--For each month of the year-->
+          <h3
+            class="link-btn"
+            th:text="${monthnames[monthEntries.key - 1]}"
+            th:onclick="|handleMonthClick(event, ${monthEntries.key})|"
+          ></h3>
+          <table
+            th:id="'tbl_' + ${monthEntries.key}"
+            th:style="'display:' + (${monthEntries.key} == ${todaymonth} ? 'block' : 'none')"
+          >
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="entry : ${monthEntries.value}">
+                <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
+                <td th:text="${entry.description}"></td>
+                <td
+                  class="amount"
+                  th:text="${#numbers.formatCurrency(entry.amount)}"
+                ></td>
+                <td>
+                  <form
+                    th:action="@{/budgetpage/{id}(id=${entry.id})}"
+                    method="post"
+                    onsubmit="return confirm('Are you sure you want to delete?')"
+                  >
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button class="btn" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Month total</td>
+                <td
+                  class="amount"
+                  colspan="2"
+                  th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"
+                ></td>
+              </tr>
+              <tr>
+                <td>Cumulative total</td>
+                <td
+                  class="amount"
+                  colspan="2"
+                  th:text="${#numbers.formatCurrency(cumulativeTotals[yearData.year][monthEntries.key])}"
+                ></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
 
