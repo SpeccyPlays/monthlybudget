@@ -19,8 +19,8 @@
         th:onclick="|handleYearClick(event, ${yearData.year})|"
       ></h2>
       <!--For each year-->
-      <div th:id="'divyear_' + ${yearData.year}">
         <div
+        class="divyearcontainer"
         th:id="'divyear_' + ${yearData.year}"
         th:style="'display:' + (${yearData.year} == ${todayyear} ? 'block' : 'none')"
           th:each="monthEntries : ${yearData.monthlyEntries}"
@@ -83,7 +83,6 @@
             </tfoot>
           </table>
         </div>
-      </div>
     </div>
 
     <!-- Budget Entry Form -->

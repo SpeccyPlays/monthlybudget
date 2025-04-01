@@ -4,6 +4,9 @@ body {
 div {
     padding: 2.5px 5px;
 }
+h3 {
+  display : inline;
+}
 .link-btn {
   display: inline-block;
   padding: 2.5px 5px;
