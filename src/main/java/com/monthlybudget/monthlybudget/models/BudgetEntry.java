@@ -92,7 +92,7 @@ public class BudgetEntry {
 
     public void setAmount(String amount) {
         float newAmount = Float.parseFloat(amount);
-        if (this.entrytype == EntryType.expense) {
+        if (this.entrytype == EntryType.expense || this.entrytype == EntryType.intosavings) {
             newAmount *= -1;
         }
         this.amount = newAmount;
