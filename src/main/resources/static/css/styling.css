@@ -1,15 +1,69 @@
 body {
-    background-color: #beeefe;
+  background-color: #beeefe;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
-div {
-    padding: 2.5px 5px;
+
+h1 {
+  text-align: center;
+  margin-top: 1rem;
 }
-h3 {
-  display : inline;
+
+/* Container for the whole content area */
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
-.link-btn {
+
+/* Content area split into two columns */
+.content-area {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: flex-start;
+}
+
+/* Left side: tables and year/month buttons */
+.left-panel {
+  flex: 2;
+}
+
+/* Right side: entry form */
+.entrysection {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+td, th {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  border-top: 1px solid #4c4c4c;
+  text-align: left;
+}
+
+/* Link button */
+.link-btn, .link-btn-month {
   display: inline-block;
-  padding: 2.5px 5px;
+  margin: 0.25rem 0.25rem 0.5rem 0;
+  padding: 5px 10px;
   font-size: 16px;
   text-decoration: none;
   background-color: #e7e7e7;
@@ -20,23 +74,16 @@ h3 {
   cursor: pointer;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+.link-btn-month {
+  margin-left: 20px;
+}
 .link-btn:hover {
   background-color: #4c4c4c;
   border-color: #3b3b3b;
+  color: white;
 }
-.header-table {
-  margin-right: 10px;
-  text-decoration: none;
-  padding: 5px;
-}
-table {
-  margin-right: 10px;
-  text-decoration: none;
-  padding: 5px;
-  padding-left: 15px;
-  border-bottom: 2px solid #4c4c4c;
-  text-align: left;
-}
+
+
 table td {
   border-top: 1px solid #4c4c4c;
 }
@@ -46,3 +93,10 @@ tfoot td {
 .amount {
   text-align: right;
 }
+.deletesection {
+  border-left: 1px solid #4c4c4c;
+  border-right: 1px solid #4c4c4c;
+  text-align: right;
+}
+
+

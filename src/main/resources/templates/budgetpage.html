@@ -6,127 +6,121 @@
     <script src="/handlers/handlers.js"></script>
   </head>
   <body>
+  <div class="main-container">
     <h1 th:if="${username}" th:text="${username}"></h1>
 
-    <!-- Show success message -->
-    <p th:if="${message}" class="success-message" th:text="${message}"></p>
+    <div class="content-area">
+      <!-- LEFT PANEL -->
+      <div class="left-panel">
+        <!-- Success message -->
+        <p th:if="${message}" class="success-message" th:text="${message}"></p>
 
-    <!-- Budget Entries Grouped by Year and Month -->
-    <div th:each="yearData : ${entries}">
-      <h2
-        class="link-btn"
-        th:text="${yearData.year}"
-        th:onclick="|handleYearClick(event, ${yearData.year})|"
-      ></h2>
-      <!--For each year-->
-        <div
-        class="divyearcontainer"
-        th:id="'divyear_' + ${yearData.year}"
-        th:style="'display:' + (${yearData.year} == ${todayyear} ? 'block' : 'none')"
-          th:each="monthEntries : ${yearData.monthlyEntries}"
-        >
-          <!--For each month of the year-->
-          <h3
+        <!-- Years and tables -->
+        <div th:each="yearData : ${entries}">
+          <h2
             class="link-btn"
-            th:text="${monthnames[monthEntries.key - 1]}"
-            th:onclick="|handleMonthClick(event, ${monthEntries.key})|"
-          ></h3>
-          <table
-            th:id="'tbl_' + ${monthEntries.key}"
-            th:style="'display:' + (${monthEntries.key} == ${todaymonth} ? 'block' : 'none')"
+            th:text="${yearData.year}"
+            th:onclick="|handleYearClick(event, ${yearData.year})|"
+          ></h2>
+          
+          <div
+            class="divyearcontainer"
+            th:id="'divyear_' + ${yearData.year}"
+            th:style="'display:' + (${yearData.year} == ${todayyear} ? 'block' : 'none')"
+            th:each="monthEntries : ${yearData.monthlyEntries}"
           >
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="entry : ${monthEntries.value}">
-                <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
-                <td th:text="${entry.description}"></td>
-                <td
-                  class="amount"
-                  th:text="${#numbers.formatCurrency(entry.amount)}"
-                ></td>
-                <td>
-                  <form
-                    th:action="@{/budgetpage/{id}(id=${entry.id})}"
-                    method="post"
-                    onsubmit="return confirm('Are you sure you want to delete?')"
-                  >
-                    <input type="hidden" name="_method" value="DELETE" />
-                    <button class="btn" type="submit">Delete</button>
-                  </form>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>Month total</td>
-                <td
-                  class="amount"
-                  colspan="2"
-                  th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}"
-                ></td>
-              </tr>
-              <tr>
-                <td>Cumulative total</td>
-                <td
-                  class="amount"
-                  colspan="2"
-                  th:text="${#numbers.formatCurrency(cumulativeTotals[yearData.year][monthEntries.key])}"
-                ></td>
-              </tr>
-            </tfoot>
-          </table>
+              <div
+                class="link-btn-month"
+                th:text="${monthnames[monthEntries.key - 1]}"
+                th:onclick="|handleMonthClick(event, ${monthEntries.key})|"
+              ></div>
+
+            <div class="table-wrapper">
+              <table
+                th:id="'tbl_' + ${monthEntries.key}"
+                th:style="'display:' + (${monthEntries.key} == ${todaymonth} ? 'block' : 'none')"
+              >
+                <colgroup>
+                  <col style="width: 20%;">
+                  <col style="width: 40%;">
+                  <col style="width: 20%;">
+                  <col style="width: 20%;">
+                </colgroup>
+
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th class="amount">Amount</th>
+                    <th class="deletesection"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="entry : ${monthEntries.value}">
+                    <td th:text="${#dates.format(entry.date, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${entry.description}"></td>
+                    <td class="amount" th:text="${#numbers.formatCurrency(entry.amount)}"></td>
+                    <td class="deletesection">
+                      <form
+                        th:action="@{/budgetpage/{id}(id=${entry.id})}"
+                        method="post"
+                        onsubmit="return confirm('Are you sure you want to delete?')"
+                      >
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn" type="submit">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Month total</td>
+                    <td class="amount" colspan="2"
+                      th:text="${#numbers.formatCurrency(#aggregates.sum(monthEntries.value.![amount]))}">
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Cumulative total</td>
+                    <td class="amount" colspan="2"
+                      th:text="${#numbers.formatCurrency(cumulativeTotals[yearData.year][monthEntries.key])}">
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- RIGHT PANEL: Entry form -->
+      <div class="entrysection">
+        <form th:action="@{/budgetpage}" method="post">
+          <label for="date">Date</label>:
+          <input type="date" id="date" name="date" th:value="${todaysdate}" required /><br />
+
+          <label for="description">Description</label>:
+          <input type="text" id="description" name="description" required /><br />
+
+          <label for="amount">Amount</label>:
+          <input type="number" id="amount" name="amount" step="0.01" required /><br />
+
+          <fieldset>
+            <legend>Type of entry</legend>
+            <label for="entrytype">Expense</label>
+            <input type="radio" id="expense" name="entrytype" value="expense" checked />
+            <label for="entrytype">Income</label>
+            <input type="radio" id="income" name="entrytype" value="income" />
+            <label for="entrytype">Into savings</label>
+            <input type="radio" id="intosavings" name="entrytype" value="intosavings" />
+          </fieldset>
+
+          <input type="submit" value="Add Entry" />
+        </form>
+      </div>
     </div>
+  </div>
+</body>
 
-    <!-- Budget Entry Form -->
-    <div>
-      <form th:action="@{/budgetpage}" method="post">
-        <label for="date">Date</label>:
-        <input
-          type="date"
-          id="date"
-          name="date"
-          th:value="${todaysdate}"
-          required
-        /><br />
-
-        <label for="description">Description</label>:
-        <input type="text" id="description" name="description" required /><br />
-
-        <label for="amount">Amount</label>:
-        <input
-          type="number"
-          id="amount"
-          name="amount"
-          step="0.01"
-          required
-        /><br />
-
-        <fieldset>
-          <legend>Type of entry</legend>
-          <label for="entrytype">Expense</label>
-          <input
-            type="radio"
-            id="expense"
-            name="entrytype"
-            value="expense"
-            checked
-          />
-          <label for="entrytype">Income</label>
-          <input type="radio" id="income" name="entrytype" value="income" />
-          <label for="entrytype">Into savings</label>
-          <input type="radio" id="intosavings" name="entrytype" value="intosavings" />
-        </fieldset>
-
-        <input type="submit" value="Add Entry" />
-      </form>
-    </div>
-  </body>
 </html>
